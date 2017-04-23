@@ -16,7 +16,7 @@ import automationFramework.pageObjects.GoogleHomePage;
  * utility class to implement most used functionalities in web testing
  */
 public class WebUtils {
-	public static boolean findAndClick(WebDriver driver, By by) {
+	public static boolean findAndClickElement(WebDriver driver, By by) {
 		/* Utility function to locate an element and click it*/
 		
 		WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -43,5 +43,10 @@ public class WebUtils {
 	public static boolean checkIfElementExists(WebDriver driver, By by) {
 		/* Utility function to check if an element exists */
 		return driver.findElements(by).size() > 0;
+	}
+	
+	public static boolean elementHasText(WebDriver driver, By by, String text) {
+		WebElement element = driver.findElement(by);
+		return element.getText().equals(text);
 	}
 }

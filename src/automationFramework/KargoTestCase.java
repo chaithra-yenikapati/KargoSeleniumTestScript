@@ -13,6 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Before;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import automationFramework.pageObjects.GoogleHomePage;
@@ -25,8 +26,13 @@ import automationFramework.util.WebUtils;
  */
 public class KargoTestCase {
 	
-	//Get new web driver instance for this 
-	WebDriver driver = new ChromeDriver();
+	//Get new web driver instance for this test
+	WebDriver driver;
+	
+	@Before
+	public void setUp(){
+		driver = new ChromeDriver();
+	}
 	
 	@Test
 	public void aboutPageNavigationShouldBeSuccessful() {
@@ -34,33 +40,53 @@ public class KargoTestCase {
 		GoogleHomePage googleHomePage = WebUtils.goToGoogle(driver);
 		
 		//Confirm that we navigated to google
-		Assert.assertTrue("Search box should exist", WebUtils.checkIfElementExists(driver, By.name("q")));
+		Assert.assertTrue("Failed to verify that google search box is displayed", WebUtils.checkIfElementExists(driver, By.name("q")));
 		
 		//Search for kargo
 		googleHomePage.searchGoogleForKeyword(driver, "Kargo");
 		
-		
+		//Verify that kargo link is located and click on it
 		Assert.assertTrue(
-			"It should locate and click on Kargo link and navigate to kargo home page",
-			WebUtils.findAndClick(driver, By.linkText("Kargo"))
+			"Falied to locate link to kargo.com",
+			WebUtils.findAndClickElement(driver, By.linkText("Kargo"))
 		);
 		
 		Assert.assertTrue(
-			"It should locate and click on nav menu link and locate the link to about page",
-			WebUtils.findAndClick(
-				driver,
-				By.cssSelector("a[href='#nav-main']")
-			)
+			"Failed to locate the home div",
+			WebUtils.checkIfElementExists(driver, By.cssSelector("div[class='section--hero__content']"))
 		);
 		
-		Assert.assertTrue("", WebUtils.findAndClick(driver, By.cssSelector("a[href='http://www.kargo.com/about/']")));
+		//verify that navigation to home page is successful
+		Assert.assertTrue(
+			"Failed to verify that navigation to home page is successful",
+			WebUtils.elementHasText(driver, By.cssSelector("div[class='section--hero__content']"), "HOME")
+		);
+		
+		//verify that nav button is located and click on it
+		Assert.assertTrue(
+			"Failed to locate Nav Menu Button",
+			WebUtils.findAndClickElement(driver, By.cssSelector("a[href='#nav-main']"))
+		);
+		
+		//verify that main menu is opened
+		Assert.assertTrue("", WebUtils.checkIfElementExists(driver, By.cssSelector("div[class='menu-main-menu-container']")));
+		
+		//locate the link to about page in the nav menu and click on it
+		Assert.assertTrue(
+			"Failed to locate about link in the nav menu", 
+			WebUtils.findAndClickElement(driver, By.cssSelector("a[href='http://www.kargo.com/about/']"))
+		);
+		
+		Assert.assertTrue(
+			"Failed to locate the about div",
+			WebUtils.checkIfElementExists(driver, By.cssSelector("div[class='section--hero__content']"))
+		);
 		
 		//Make sure that navigation to about page is successful by finding the text ABOUT US 
-		WebElement aboutDiv = driver.findElement(By.className("section--hero__content"));
-		
-		Assert.assertEquals("It should locate the div with text 'ABOUT US'", aboutDiv.getText(), "ABOUT US");
-		
-		System.out.println("Test case passed");
+		Assert.assertTrue(
+			"Failed to verify that navigation to about page is successful",
+			WebUtils.elementHasText(driver, By.cssSelector("div[class='section--hero__content']"), "ABOUT US")
+		);
 	}
 	
 	@Test
@@ -74,8 +100,6 @@ public class KargoTestCase {
 			while ((keyword = fileReader.readLine()) != null) {
 				//Go to google
 				GoogleHomePage googleHomePage = WebUtils.goToGoogle(driver);
-				
-				System.out.println("Searching for keyword " + keyword + " in google");
 				
 				//search for keyword
 				googleHomePage.searchGoogleForKeyword(driver, keyword);
@@ -114,11 +138,11 @@ public class KargoTestCase {
 				    
 			    	try {
 			    		//try to find the next page of search results
-			    		foundNextPage = WebUtils.findAndClick(driver, By.linkText("Next"));
+			    		foundNextPage = WebUtils.findAndClickElement(driver, By.linkText("Next"));
 			    	} catch (WebDriverException we) {
 			    		//sometimes the element can be detached from dom so refresh and try again
 			    		driver.navigate().refresh();
-			    		foundNextPage = WebUtils.findAndClick(driver, By.linkText("Next"));
+			    		foundNextPage = WebUtils.findAndClickElement(driver, By.linkText("Next"));
 			    	}
 			    	
 			    	//stop if there is no next page
