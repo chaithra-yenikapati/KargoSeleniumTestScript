@@ -15,6 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class GoogleHomePage {
 	public void searchGoogleForKeyword(WebDriver driver, String searchKeyword) {
 		/* Searches for given keyword in google */
+		System.out.println("Searching for keyword " + searchKeyword);
 		WebElement searchElement = driver.findElement(By.name("q"));
 		searchElement.clear();
 		searchElement.sendKeys(searchKeyword);

@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -149,6 +150,9 @@ public class KargoTestCase {
 			    	if (!foundNextPage) {
 			    		break;
 			    	}
+			    	
+			    	//implicitly wait to synchronize the requests
+			    	driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			    }
 			}
 			
