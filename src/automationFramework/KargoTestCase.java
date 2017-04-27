@@ -70,7 +70,10 @@ public class KargoTestCase {
 		);
 		
 		//verify that main menu is opened
-		Assert.assertTrue("", WebUtils.checkIfElementExists(driver, By.cssSelector("div[class='menu-main-menu-container']")));
+		Assert.assertTrue(
+			"Failed to verify that main menu is opened",
+			WebUtils.checkIfElementExists(driver, By.cssSelector("div[class='menu-main-menu-container']"))
+		);
 		
 		//locate the link to about page in the nav menu and click on it
 		Assert.assertTrue(
